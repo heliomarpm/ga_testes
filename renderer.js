@@ -1,0 +1,1 @@
+const appVersion = require(__dirname + "/package.json").version;
