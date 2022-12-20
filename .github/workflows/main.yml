@@ -14,16 +14,16 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest,  ubuntu-latest] #macos-latest, ubuntu-latest, 
-        node-version: [18.x]
+        # node-version: [18.x]
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
 
-      - name: Install Node.js ${{ matrix.node-version }}
+      - name: Install Node.js #${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18.x #${{ matrix.node-version }}
           cache: 'npm'
 
       # - name: Install Snapcraft
