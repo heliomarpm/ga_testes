@@ -36,12 +36,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
     "prebuild": "node prebuild.js",
-    "build": "electron-builder -wml",
+    "build": "electron-builder",
     "build-win": "npm run prebuild && electron-builder -w",
     "build-win32": "npm run prebuild && electron-builder -w \"--ia32\"",
     "build-mac": "npm run prebuild && electron-builder -m",
-    "build-linux": "npm run prebuild && electron-builder -l",
-    "dist": "build"
+    "build-linux": "npm run prebuild && electron-builder -l"
   },
   "devDependencies": {
     "electron": "^22.0.0",
