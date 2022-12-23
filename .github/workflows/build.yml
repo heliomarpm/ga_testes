@@ -1,4 +1,4 @@
-name: Build
+name: Create TAG
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  auto-tag:
     runs-on: ubuntu-latest # ${{ matrix.os }}
 
     # Platforms to build on/for
@@ -20,20 +20,20 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v3
 
-      - name: Install Node.js #${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x #${{ matrix.node-version }}
-          cache: 'npm'
+      # - name: Install Node.js #${{ matrix.node-version }}
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 18.x #${{ matrix.node-version }}
+      #     cache: 'npm'
 
-      - name: Install packages
-        run: npm ci
+      # - name: Install packages
+      #   run: npm ci
 
-      - name: Build
-        run: npm run prebuild
+      # - name: Build
+      #   run: npm run prebuild
 
       - name: Create Tag
-        uses: butlerlogic/action-autotag@stable
+        uses: butlerlogic/action-autotag@master
         with:
           tag_prefix: "v"
         env:
