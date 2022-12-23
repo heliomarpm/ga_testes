@@ -1,4 +1,4 @@
-name: Build/release
+name: Build
 
 on:
   push:
@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v3
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Install Node.js #${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -26,14 +28,13 @@ jobs:
           node-version: 18.x #${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Install packages & Build
-        run: |
-          npm ci
-          npm run build
+      - name: Install packages
+        run: npm ci
+
+      - name: Build
+        run: npm run build
 
       - name: Create Tag
-        uses: butlerlogic/action-autotag@stable
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        uses: butlerlogic/action-autotag@stable        
         with:
           tag_prefix: "v"  
