@@ -1,6 +1,6 @@
 {
 	"name": "tjnotes",
-	"version": "1.0.6",
+	"version": "1.0.9",
 	"description": "Exibe uma lista de notas com fundo transparente",
 	"main": "index.js",
 	"author": "Heliomar P. Marques",
@@ -20,7 +20,7 @@
 	"scripts": {
 		"dev": "electron . --developer",
 		"start": "electron . ",
-		"prebuild": "node prebuild.js",
+		"upversion": "node prebuild.js",
 		"build": "electron-builder"
 	},
 	"dependencies": {
