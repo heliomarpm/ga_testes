@@ -1,45 +1,102 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
-const path = require('path');
+const { app, BrowserWindow, screen, ipcMain, globalShortcut } = require('electron');
+const path = require("path");
+const fs = require("fs");
+const settings = require("electron-settings");
 
-const appVersion = require(__dirname + "/package.json").version;
+const IS_DEBUG = process.argv.indexOf("--developer") != -1;
 
+let win;
 function createWindow() {
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: false, // is default value after Electron v5
-      contextIsolation: true, // protect against prototype pollution
-      enableRemoteModule: false, // turn off remote
-      preload: path.join(__dirname, 'preload.js')
+    const size = screen.getPrimaryDisplay().workAreaSize;
+    const winPosition = getInitPosition({ width: 464, height: size.height });
+
+    win = new BrowserWindow({
+        icon: __dirname + "./app/assets/icon.png",
+        // width: 464,
+        // height: size.height,
+        frame: false,
+        transparent: true,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            enableRemoteModule: true,
+            //preload: path.join(__dirname, 'preload.js'),
+        },
+        resizable: true,
+        maximizable: true,
+        autoHideMenuBar: true,
+        ...winPosition
+    })
+
+    if (IS_DEBUG) {
+        win.openDevTools({ detach: true });
+        win.maximize();
     }
-  });
 
-  // if (DEBUG) {
-  //   const devtools = new BrowserWindow();
-    
-  //   win.webContents.setDevToolsWebContents(devtools.webContents);
-  //   win.webContents.openDevTools({ mode: 'detach' });
-  // }
+    createEvents()
 
-  win.loadFile('index.html');
-  win.setTitle(`Udeler | Udemy Course Downloader - v${appVersion}`);
+    // win.setAlwaysOnTop(true, 'screen');
+    win.loadFile(__dirname + '/app/index.html')
 }
 
 app.whenReady().then(() => {
-  createWindow();
+    createWindow()
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
-  })
+    app.on('activate', () => {
+        // On macOS it's common to re-create a window in the app when the
+        // dock icon is clicked and there are no other windows open.
+        if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    })
 })
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-})
+// Quit when all windows are closed.
+app.on("window-all-closed", () => {
+    if (process.platform !== 'darwin') app.quit();
+});
 
-ipcMain.on('quit-app', () => app.quit());
+
+function createEvents() {
+    globalShortcut.register('f5', function () {
+        console.log('f5 is pressed')
+        win.reload()
+    })
+    globalShortcut.register('CommandOrControl+R', function () {
+        console.log('CommandOrControl+R is pressed')
+        win.reload()
+    })
+
+    win.addListener('ready-to-show', () => {
+        win.show()
+    })
+
+    win.addListener('onclick', () => {
+        console.log('click')
+        win.transparent = !win.transparent;
+    })
+
+    win.on("close", () => {
+        saveIniPosition();
+    })
+    win.on("closed", () => {
+        win = null;
+    });
+
+    // ipcMain.on('open-file', (event, file) => {
+    //     console.log(file)
+    //     win.loadFile(file)
+    // });
+
+    ipcMain.on('closeApp', () => {
+        win.close();
+        app.quit();
+    });
+
+}
+
+function getInitPosition(defaultPosition) {
+    return settings.getSync("win-position") ?? defaultPosition;
+}
+
+function saveIniPosition() {
+    settings.setSync("win-position", win.getBounds());
+}

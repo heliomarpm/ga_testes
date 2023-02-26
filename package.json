@@ -1,49 +1,76 @@
 {
-  "name": "ga_testes",
-  "version": "1.0.1",
-  "description": "",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/heliomarpm/ga_testes.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/heliomarpm/ga_testes/issues"
-  },
-  "homepage": "https://github.com/heliomarpm/ga_testes#readme",
-  "build": {
-    "appId": "com.ga_testes.app",
-    "productName": "ga_testes",
-    "icon": "path/to/icons/dir",
-    "directories": {
-      "buildResources": "assets/images/build"
-    },
-    "mac": {
-      "category": "public.app-category.utilities"
-    },
-    "linux": {
-      "category": "Utility",
-      "target": "AppImage"
-    },
-    "win": {
-      "target": "portable"
-    }
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron .",
-    "prebuild": "node prebuild.js",
-    "build": "electron-builder",
-    "build-win": "npm run prebuild && electron-builder -w",
-    "build-win32": "npm run prebuild && electron-builder -w \"--ia32\"",
-    "build-mac": "npm run prebuild && electron-builder -m",
-    "build-linux": "npm run prebuild && electron-builder -l"
-  },
-  "devDependencies": {
-    "electron": "^22.0.0",
-    "electron-builder": "^23.6.0"
-  }
+	"name": "tjnotes",
+	"version": "1.0.5",
+	"description": "Exibe uma lista de notas com fundo transparente",
+	"main": "index.js",
+	"author": "Heliomar P. Marques",
+	"license": "ISC",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/heliomarpm/electron.transparent-json-notes.git"
+	},
+	"bugs": {
+		"url": "https://github.com/heliomarpm/electron.transparent-json-notes/issues"
+	},
+	"homepage": "https://github.com/heliomarpm/electron.transparent-json-notes#readme",
+	"keywords": [
+		"electron",
+		"sticky-notes"
+	],
+	"scripts": {
+		"dev": "electron . --developer",
+		"start": "electron . ",
+		"prebuild": "node prebuild.js",
+		"build": "electron-builder"
+	},
+	"dependencies": {
+		"electron-settings": "^4.0.2",
+		"jquery": "^3.6.3"
+	},
+	"devDependencies": {
+		"electron": "^22.2.0",
+		"electron-builder": "^23.6.0"
+	},
+	"build": {
+		"appId": "com.heliomarpm.transparent-json-notes",
+		"productName": "TJsonNotes",
+		"copyright":"Copyright © 2023 - Heliomar Marques",
+		"artifactName": "${productName}-Setup-v${version}_${os}_${arch}.${ext}",
+		"directories": {
+			"buildResources": "app/assets"
+		},
+		"mac": {
+			"category": "public.app-category.utilities"
+		},
+		"dmg": {
+			"icon": false
+		},
+		"linux": {
+			"category": "Utilities",
+			"synopsis": "Exibe uma lista de notas com fundo transparente",
+			"target": [
+				"AppImage",
+				"deb",
+				"pacman",
+				"freebsd",
+				"rpm"
+			]
+		},
+		"win": {
+			"target": [
+				"nsis",
+				"portable",
+				"zip"
+			]
+		},
+		"extraResources": [
+			{
+				"from": "./app/data/",
+				"to": "data",
+				"filter": [
+					"**/*"
+				]
+			}
+		]
+	}
 }

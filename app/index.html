@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self';"> -->
+    <!-- <meta name="theme-color" content="#222"> -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+
+    <title>TJson Notes</title>
+
+    <script>
+        const { app, ipcRenderer } = require('electron');
+        const path = require("path");
+        const fs = require("fs");
+        const $ = (jQuery = require("jquery"));
+
+        // CARREGAR NOTAS
+        $(function () {
+            const appPath = __dirname.replace("app.asar\\app", '');
+            const filepath = path.join(appPath, 'data', 'notes.json');
+            const data = fs.readFileSync(filepath, 'utf-8');
+
+            const notes = JSON.parse(data);
+            console.table(notes);
+            notes.tasks.forEach(el => {
+                let rows = `<tr><td>${el.group}</td><td>${el.list}</td></tr>`;
+                $(rows).appendTo("#tasks tbody");
+            });
+        });        
+
+        // ipcRenderer.on('savePosition', () => {
+        //     const appPath = __dirname.replace("app.asar\\app", '');
+        // });
+        
+    </script>
+</head>
+
+<body>
+    <div class="actions">
+        <input type="checkbox" id="off-drag" hidden="true">
+        <button id="close-btn" class="action no-drag"><i class="fa-solid fa-xmark"></i></button>
+        <button id="stop-drag" class="action no-drag"><i class="fa-solid fa-thumbtack"></i></button>
+        <button id="config"    class="action no-drag"><i class="fa-solid fa-gear"></i></button>
+    </div>
+
+    <div class="scroll">
+        <div id="draggable" class="drag">
+            <table id="tasks" cellpadding="0" cellspacing="0">
+                <!-- <thead>
+                    <th>Semana</th>
+                    <th>Tarefa</th>
+                </thead> -->
+                <tbody>
+                    <!-- AQUI SERÁ CARREGADO OS DADOS DO ARQUIVO NOTES.JSON-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("close-btn").addEventListener("click", () => {
+            console.log("close-btn");
+            ipcRenderer.send('closeApp');
+        });
+
+        document.getElementById("stop-drag").addEventListener("click", () => {
+            const chkDrag = $("#off-drag");
+            const dragActive = chkDrag.is(":checked");
+
+            console.log("on-drag", dragActive);
+            if (dragActive) {
+                chkDrag.prop("checked", false);
+                $("#draggable").addClass("drag");
+            } else {
+                chkDrag.prop("checked", true);
+                $("#draggable").removeClass("drag");
+            }
+        });
+
+        // var draggable = document.getElementById("draggable");
+        // draggable.addEventListener("mouseenter", ()=>{
+        //     console.log("mouseenter");
+        //     document.querySelector(".actions").setAttribute("style", "opacity=1;");
+        // });
+        // draggable.addEventListener("mouseleave", ()=>{
+        //     console.log("mouseleave");
+        //     document.querySelector(".actions").setAttribute("style", "opacity=0;");
+        // });
+    </script>
+</body>
+
+</html>
