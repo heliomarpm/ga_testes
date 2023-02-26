@@ -9,42 +9,42 @@ on:
     branches: [ main ]
 
 jobs:
-  create-tag:
-    runs-on: ubuntu-latest # ${{ matrix.os }}
+  # create-tag:
+  #   runs-on: ubuntu-latest # ${{ matrix.os }}
 
-    # Platforms to build on/for
-    # strategy:
-    #   matrix:
-    #     os: [windows-latest,  ubuntu-latest] #macos-latest, ubuntu-latest, 
-    #     # node-version: [18.x]
+  #   # Platforms to build on/for
+  #   # strategy:
+  #   #   matrix:
+  #   #     os: [windows-latest,  ubuntu-latest] #macos-latest, ubuntu-latest, 
+  #   #     # node-version: [18.x]
 
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Check out Git repository
+  #       uses: actions/checkout@v3
 
-      # - name: Install Node.js #${{ matrix.node-version }}
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: 18.x #${{ matrix.node-version }}
-      #     cache: 'npm'
+  #     # - name: Install Node.js #${{ matrix.node-version }}
+  #     #   uses: actions/setup-node@v3
+  #     #   with:
+  #     #     node-version: 18.x #${{ matrix.node-version }}
+  #     #     cache: 'npm'
 
-      # - name: Install packages
-      #   run: npm ci
+  #     # - name: Install packages
+  #     #   run: npm ci
 
-      # - name: Build
-      #   run: npm run prebuild
+  #     # - name: Build
+  #     #   run: npm run prebuild
 
-      - name: Create Tag
-        uses: butlerlogic/action-autotag@master
-        with:
-          tag_prefix: "v"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  #     - name: Create Tag
+  #       uses: butlerlogic/action-autotag@master
+  #       with:
+  #         tag_prefix: "v"
+  #       env:
+  #         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
   release:
     # if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ${{ matrix.os }}
-    needs: [create-tag]
+    # needs: [create-tag]
 
     strategy:
       matrix:
@@ -59,20 +59,20 @@ jobs:
         with:
           node-version: 16
 
-      - name: apt-update
-        if: startsWith(matrix.os, 'ubuntu-latest')
-        run: sudo apt-get update
+      # - name: apt-update
+      #   if: startsWith(matrix.os, 'ubuntu-latest')
+      #   run: sudo apt-get update
 
-      - name: autoremove
-        if: startsWith(matrix.os, 'ubuntu-latest')
-        run: sudo apt autoremove
+      # - name: autoremove
+      #   if: startsWith(matrix.os, 'ubuntu-latest')
+      #   run: sudo apt autoremove
 
-      - name: Install libarchive rpm on Linux
-        if: startsWith(matrix.os, 'ubuntu-latest')
-        run: sudo apt-get install libarchive-tools rpm
+      # - name: Install libarchive rpm on Linux
+      #   if: startsWith(matrix.os, 'ubuntu-latest')
+      #   run: sudo apt-get install libarchive-tools rpm
 
       - name: Release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
+        uses: paneron/action-electron-builder@v1.8.1 #samuelmeuli/action-electron-builder@v1
         with:
           # GitHub token, automatically provided to the action
           # (No need to define this secret in the repo settings)
@@ -80,4 +80,4 @@ jobs:
 
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
-          release: true
+          release: ${{ startsWith(github.ref, 'refs/tags/v') }}
