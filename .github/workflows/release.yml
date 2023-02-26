@@ -1,20 +1,58 @@
-name: "Release"
+name: "Push Or PR"
+# on:
+#   push:
+#     tags: ["*"]
 on:
   push:
-    tags: ["*"]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
+  create-tag:
+    runs-on: ubuntu-latest # ${{ matrix.os }}
+
+    # Platforms to build on/for
+    # strategy:
+    #   matrix:
+    #     os: [windows-latest,  ubuntu-latest] #macos-latest, ubuntu-latest, 
+    #     # node-version: [18.x]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      # - name: Install Node.js #${{ matrix.node-version }}
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 18.x #${{ matrix.node-version }}
+      #     cache: 'npm'
+
+      # - name: Install packages
+      #   run: npm ci
+
+      # - name: Build
+      #   run: npm run prebuild
+
+      - name: Create Tag
+        uses: butlerlogic/action-autotag@master
+        with:
+          tag_prefix: "v"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ${{ matrix.os }}
-
+    needs: [create-tag]
+    
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v2
