@@ -30,7 +30,10 @@ jobs:
         run: npm run build
 
       - name: see directory
-        run: ls ./dist
+        run: |
+          ls ./dist
+          echo github.ref
+          echo ${{ startsWith(github.ref, 'refs/tags/v') }}
 
       # - uses: lucyio/upload-to-release@master
       #   with:
