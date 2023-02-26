@@ -20,7 +20,7 @@
 	"scripts": {
 		"dev": "electron . --developer",
 		"start": "electron . ",
-		"prebuild": "node prebuild.js",
+		"upversion": "node prebuild.js",
 		"build": "electron-builder"
 	},
 	"dependencies": {
