@@ -1,6 +1,6 @@
 {
 	"name": "tjnotes",
-	"version": "1.0.6",
+	"version": "1.0.8",
 	"description": "Exibe uma lista de notas com fundo transparente",
 	"main": "index.js",
 	"author": "Heliomar P. Marques",
