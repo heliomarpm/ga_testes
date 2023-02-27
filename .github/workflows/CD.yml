@@ -11,7 +11,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        # os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
 
     steps:
       - name: Check out Git repository
@@ -54,4 +55,5 @@ jobs:
             dist/*.rpm
             dist/*.tar.gz
         env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          # GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          github_token: ${{ secrets.github_token }}
