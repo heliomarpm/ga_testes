@@ -55,7 +55,6 @@
 			"target": [
 				"AppImage",
 				"deb",
-				"pacman",
 				"freebsd",
 				"rpm"
 			]
