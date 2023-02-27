@@ -1,9 +1,13 @@
 {
 	"name": "tjnotes",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"description": "Exibe uma lista de notas com fundo transparente",
 	"main": "index.js",
-	"author": "Heliomar P. Marques",
+	"author": {
+		"name": "Heliomar P. Marques",
+		"email": "heliomarpm@gmail.com",
+		"url": "https://github.com/heliomarpm"
+	},
 	"license": "ISC",
 	"repository": {
 		"type": "git",
